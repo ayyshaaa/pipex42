@@ -1,7 +1,8 @@
 CC = cc
 CFLAGS = -Wall -Wextra -Werror -ggdb -g3
 INCLUDES = -I/usr/include -Ilibft -Ignl -Iftprintf -O3 
-SRCS = main.c
+SRCS = main.c \
+parsing.c 
 NAME = pipex
 OBJS = $(SRCS:.c=.o)
 GNL_DIR = ./gnl

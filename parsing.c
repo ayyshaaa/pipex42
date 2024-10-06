@@ -6,67 +6,85 @@
 /*   By: aistierl <aistierl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/05 18:18:25 by aistierl          #+#    #+#             */
-/*   Updated: 2024/10/05 18:32:48 by aistierl         ###   ########.fr       */
+/*   Updated: 2024/10/06 19:26:01 by aistierl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
-char    **ft_list_paths(char **envp)
+char	**ft_free_tab(char **tab)
 {
-    int     i;
-    char    *all_paths;
-    char    **each_path;
-    
-    i = 0;
-	while (strncmp(envp[i], "PATH=", 5) != 0)
-		i++;
-    all_paths = ft_substr(envp[i], 5, ft_strlen(envp[i]) - 5);
-    if (all_paths == NULL)
-        return (NULL);
-	each_path = ft_split(all_paths, ':');
-    free(all_paths);
+	int	i;
+
 	i = 0;
-	while (each_path[i])
-		ft_concat_free(each_path[i++], "/");
+	while (tab[i])
+		free(tab[i++]);
+	free(tab);
+	return (NULL);
 }
 
-void	ft_parse_cmd_path(int argc, char **argv, char **envp,
-		t_pipex_data *data)
+char	**ft_list_paths(char **envp)
 {
 	int		i;
-	int		j;
-	int		k;
-	char	*PATH_from_env;
+	char	*all_paths;
 	char	**each_path;
-	char	**temp;
-	char	*temp2;
-    
-    each_path = ft_list_paths(envp);
-	i = 2;
-	j = 0;
-	k = 0;
-	while (i < argc - 1)
+
+	i = 0;
+	while (strncmp(envp[i], "PATH=", 5) != 0)
+		i++;
+	all_paths = ft_substr(envp[i], 5, ft_strlen(envp[i]) - 5);
+	if (all_paths == NULL)
+		return (NULL);
+	each_path = ft_split(all_paths, ':');
+	free(all_paths);
+	i = 0;
+	while (each_path[i])
 	{
-		if (argv[i][0] == '/' || argv[i][0] == '.' || argv[i][0] == '~')
-		{
-			temp = ft_split(argv[2], ' ');
-            if (access() != -1)
-			    data->cmd_path[j++] = temp[0];
-			ft_free_tab(temp);
-		}
-		else
-        {
-            while (each_path[k])
-            {
-			    temp2 = ft_strjoin(each_path[k], argv[i]);
-                if (access() != -1)
-                    data->cmd_path[j++] = temp2[0];
-                k++;
-		        free(temp2);
-            }
-        }
-        i++;
+		ft_concat_free(each_path[i], "/");
+		i++;
 	}
-	data->cmd_path[j] = NULL;
+	return (each_path);
+}
+
+char	*ft_cmd_path(char *argv, char **envp)
+{
+	int		i;
+	char	**each_path;
+	char	*temp;
+
+	if (argv[0] == '/' || argv[0] == '.' || argv[0] == '~')
+	{
+		if (access(argv, F_OK | X_OK) != -1)
+			return (argv);
+		return (0);
+	}
+	each_path = ft_list_paths(envp);
+	i = 0;
+	while (each_path[i])
+	{
+		temp = ft_strjoin(each_path[i], argv);
+		if (access(temp, F_OK | X_OK) != -1)
+			return (temp);
+		i++;
+	}
+	free(temp);
+	return (0);
+}
+
+void	ft_exec(char *argv, char **envp)
+{
+	char	**full_cmd;
+	char	*cmd_path;
+	int		exec_return_value;
+
+	full_cmd = ft_split(argv, ' ');
+	cmd_path = ft_cmd_path(full_cmd[0], envp);
+	if (cmd_path == 0)
+	{
+		ft_free_tab(full_cmd);
+		perror("Command or command path is invalid.");
+	}
+	exec_return_value = execve(cmd_path, full_cmd, envp);
+	if (exec_return_value == -1)
+		perror("execve is not functionning");
 }
