@@ -6,7 +6,7 @@
 /*   By: aistierl <aistierl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/02 16:33:52 by aistierl          #+#    #+#             */
-/*   Updated: 2024/10/06 19:26:54 by aistierl         ###   ########.fr       */
+/*   Updated: 2024/10/07 12:28:05 by aistierl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ void	ft_child_process(char *file_input, char *raw_cmd, char **envp,
 	close(infile);
 }
 
-void	ft_parent_process(char *file_output, char *raw_cmd, char **envp,
+void	ft_child_two_process(char *file_output, char *raw_cmd, char **envp,
 		int *pipe_ends)
 {
 	int	outfile;
@@ -45,8 +45,8 @@ void	ft_parent_process(char *file_output, char *raw_cmd, char **envp,
 int	main(int argc, char **argv, char **envp)
 {
 	int		pipe_ends[2];
-	pid_t	parent;
 	pid_t	child;
+	pid_t	second_child;
 
 	if (argc != 5)
 		perror("Number of arguments is invalid.");
@@ -60,15 +60,15 @@ int	main(int argc, char **argv, char **envp)
 			perror ("Child fork failed.");
 		else if (child == 0)
 			ft_child_process(argv[1], argv[2], envp, pipe_ends);
-		parent = fork();
-		if (parent < 0)
-			perror ("parent fork failed.");
-		else if (parent == 0)
-			ft_parent_process(argv[4], argv[3], envp, pipe_ends);
+		second_child = fork();
+		if (second_child < 0)
+			perror ("Parent fork failed.");
+		else if (second_child == 0)
+			ft_child_two_process(argv[4], argv[3], envp, pipe_ends);
 		close(pipe_ends[0]);
 		close(pipe_ends[1]);
 		waitpid(child, NULL, 0);
-		waitpid(parent, NULL, 0);
+		waitpid(second_child, NULL, 0);
 	}
 	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: aistierl <aistierl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/05 18:18:25 by aistierl          #+#    #+#             */
-/*   Updated: 2024/10/06 19:26:01 by aistierl         ###   ########.fr       */
+/*   Updated: 2024/10/07 12:06:37 by aistierl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ char	**ft_list_paths(char **envp)
 	i = 0;
 	while (each_path[i])
 	{
-		ft_concat_free(each_path[i], "/");
+		each_path[i] = ft_concat_free(each_path[i], "/");
 		i++;
 	}
 	return (each_path);
@@ -86,5 +86,9 @@ void	ft_exec(char *argv, char **envp)
 	}
 	exec_return_value = execve(cmd_path, full_cmd, envp);
 	if (exec_return_value == -1)
+	{
+		free(cmd_path);
+		ft_free_tab(full_cmd);
 		perror("execve is not functionning");
+	}
 }
