@@ -6,7 +6,7 @@
 /*   By: aistierl <aistierl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/13 18:08:01 by aistierl          #+#    #+#             */
-/*   Updated: 2024/09/29 15:48:35 by aistierl         ###   ########.fr       */
+/*   Updated: 2024/10/08 15:32:46 by aistierl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ void	ft_putnbr_hexap(unsigned long nb)
 		res = nb % 10 + 'a';
 		write(1, &res, 1);
 	}
-	if (nb >= 0 && nb < 10)
+	if (nb < 10)
 	{
 		res = nb % 10 + '0';
 		write(1, &res, 1);

@@ -6,7 +6,7 @@
 /*   By: aistierl <aistierl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 17:45:09 by aistierl          #+#    #+#             */
-/*   Updated: 2024/10/04 17:19:18 by aistierl         ###   ########.fr       */
+/*   Updated: 2024/10/08 17:46:52 by aistierl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ char	*ft_strrchr(const char *s, int c)
 	while (i > 0)
 	{
 		if (result[i] == character)
-			return (result + i + 1); //modif + 1 pour enlever le / apres la commande
+			return (result + i + 1);
 		i--;
 	}
 	if (result[0] == character)

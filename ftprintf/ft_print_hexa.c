@@ -6,7 +6,7 @@
 /*   By: aistierl <aistierl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/13 13:46:39 by aistierl          #+#    #+#             */
-/*   Updated: 2024/09/29 15:48:22 by aistierl         ###   ########.fr       */
+/*   Updated: 2024/10/08 15:32:28 by aistierl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ void	ft_putnbr_hexa(unsigned int number, char type)
 		res = number % 10 + 'a';
 		write(1, &res, 1);
 	}
-	if (number >= 0 && number <= 9)
+	if (number <= 9)
 	{
 		res = number % 10 + '0';
 		write(1, &res, 1);

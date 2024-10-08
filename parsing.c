@@ -6,7 +6,7 @@
 /*   By: aistierl <aistierl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/05 18:18:25 by aistierl          #+#    #+#             */
-/*   Updated: 2024/10/07 12:06:37 by aistierl         ###   ########.fr       */
+/*   Updated: 2024/10/08 17:45:31 by aistierl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,10 +16,13 @@ char	**ft_free_tab(char **tab)
 {
 	int	i;
 
+	if (!tab)
+		return (NULL);
 	i = 0;
 	while (tab[i])
 		free(tab[i++]);
 	free(tab);
+	tab = NULL;
 	return (NULL);
 }
 
@@ -30,8 +33,10 @@ char	**ft_list_paths(char **envp)
 	char	**each_path;
 
 	i = 0;
-	while (strncmp(envp[i], "PATH=", 5) != 0)
+	while (envp[i] != NULL && ft_strncmp(envp[i], "PATH=", 5) != 0)
 		i++;
+	if (envp[i] == NULL)
+		return (NULL);
 	all_paths = ft_substr(envp[i], 5, ft_strlen(envp[i]) - 5);
 	if (all_paths == NULL)
 		return (NULL);
@@ -52,23 +57,24 @@ char	*ft_cmd_path(char *argv, char **envp)
 	char	**each_path;
 	char	*temp;
 
+	temp = NULL;
 	if (argv[0] == '/' || argv[0] == '.' || argv[0] == '~')
 	{
 		if (access(argv, F_OK | X_OK) != -1)
 			return (argv);
-		return (0);
+		return (NULL);
 	}
 	each_path = ft_list_paths(envp);
 	i = 0;
-	while (each_path[i])
+	while (each_path && each_path[i])
 	{
 		temp = ft_strjoin(each_path[i], argv);
 		if (access(temp, F_OK | X_OK) != -1)
 			return (temp);
 		i++;
+		free(temp);
 	}
-	free(temp);
-	return (0);
+	return (NULL);
 }
 
 void	ft_exec(char *argv, char **envp)
@@ -82,13 +88,15 @@ void	ft_exec(char *argv, char **envp)
 	if (cmd_path == 0)
 	{
 		ft_free_tab(full_cmd);
-		perror("Command or command path is invalid.");
+		perror("No such path or directory.");
+		exit(1);
 	}
 	exec_return_value = execve(cmd_path, full_cmd, envp);
 	if (exec_return_value == -1)
 	{
+		perror("execve is not functionning");
 		free(cmd_path);
 		ft_free_tab(full_cmd);
-		perror("execve is not functionning");
 	}
+	exit(1);
 }
