@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   bonus.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aistierl <aistierl@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aisha <aisha@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/07 13:06:45 by aistierl          #+#    #+#             */
-/*   Updated: 2024/10/09 19:12:38 by aistierl         ###   ########.fr       */
+/*   Updated: 2024/10/09 22:42:09 by aisha            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,8 +39,10 @@ int	main(int argc, char **argv, char **envp)
 	int		pipe_ends[2];
 	pid_t	child;
 	int	i;
+	int j;
 	int	file_input;
 	int	file_output;
+	int		*child_id_list;
 
 	if (argc < 5)
 		return (perror("Number of arguments is invalid."), 1);
@@ -49,6 +51,10 @@ int	main(int argc, char **argv, char **envp)
 	if (file_input < 0 || file_output < 0)
 		perror("Cannot open infile/outfile.");
 	i = 2;
+	j = 0;
+	child_id_list = malloc(sizeof(int) * (argc - 3));
+	if (!child_id_list)
+		return (perror("Failed to allocate memory for child IDs."), 1);
 	while (i < argc - 2)
 	{
 		if (pipe(pipe_ends) == -1)
@@ -63,10 +69,14 @@ int	main(int argc, char **argv, char **envp)
 		}
 		close(pipe_ends[1]);
 		file_input = pipe_ends[0];			
-		waitpid(child, NULL, 0);
+		child_id_list[j++] = child;
 		i++;
-	}	
+	}
 	ft_child_process_bonus(file_input, argv[i], envp, file_output);
+	i = 0;
+	while (child_id_list && child_id_list[i])
+		waitpid(child_id_list[i++], NULL, 0);
+	free(child_id_list);
 	ft_close_pipes(pipe_ends);
 	return (0);
 }
