@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipex.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aisha <aisha@student.42.fr>                +#+  +:+       +#+        */
+/*   By: aistierl <aistierl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/02 16:34:59 by aistierl          #+#    #+#             */
-/*   Updated: 2024/10/09 21:54:15 by aisha            ###   ########.fr       */
+/*   Updated: 2024/10/10 18:32:27 by aistierl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,5 @@ char	**ft_list_paths(char **envp);
 char	**ft_free_tab(char **tab);
 void	ft_close_pipes(int *pipe);
 void	ft_tidyup(char *error_message, int *pipe_ends);
-void	ft_child_process_bonus(int file_input, char *raw_cmd, char **envp, int file_output);
 
 #endif
