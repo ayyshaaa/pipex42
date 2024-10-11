@@ -6,7 +6,7 @@
 /*   By: aistierl <aistierl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/05 18:18:25 by aistierl          #+#    #+#             */
-/*   Updated: 2024/10/08 17:45:31 by aistierl         ###   ########.fr       */
+/*   Updated: 2024/10/11 16:50:04 by aistierl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,10 +70,11 @@ char	*ft_cmd_path(char *argv, char **envp)
 	{
 		temp = ft_strjoin(each_path[i], argv);
 		if (access(temp, F_OK | X_OK) != -1)
-			return (temp);
+			return (ft_free_tab(each_path), temp);
 		i++;
 		free(temp);
 	}
+	ft_free_tab(each_path);
 	return (NULL);
 }
 
